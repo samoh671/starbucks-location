@@ -37,9 +37,9 @@ def calculate_weighted_avg(individual):
     return total_distance / total_weight
 
 
-population_size = 1000
+population_size = 100000
 mutation_chance = 0.1
-num_generations = 1000
+num_generations = 12
 
 population = []
 for i in range(population_size):
