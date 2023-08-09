@@ -32,7 +32,7 @@ def calculate_weighted_avg(individual):
     for index, p in enumerate(points):
         distance = manhattan_distance(individual, p)
         total_distance += distance * weights[index]
-        total_weight += weights[p[0]]
+        total_weight += weights[index]
 
     return total_distance / total_weight
 
@@ -61,12 +61,12 @@ for generation in range(num_generations):
 
     children = []
     for parent1, parent2 in parents:
-        child = (0, 0)
+        child = []
         for i in range(len(parent1)):
             if random.random() < 0.5:
-                child[i] = parent1[i]
+                child.append(parent1[i])
             else:
-                child[i] = parent2[i]
+                child.append(parent2[i])
 
         if random.random() < mutation_chance:
             child = (random.randint(0, 12), random.randint(0, 20))
