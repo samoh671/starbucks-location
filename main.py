@@ -37,9 +37,9 @@ def calculate_weighted_avg(individual):
     return total_distance / total_weight
 
 
-population_size = 100
-mutation_chance = 0.01
-num_generations = 100
+population_size = 1000
+mutation_chance = 0.1
+num_generations = 1000
 
 population = []
 for i in range(population_size):
@@ -76,4 +76,20 @@ for generation in range(num_generations):
     population = children
 
 best = min(population, key=calculate_weighted_avg)
-print(best)
+bests = sorted(population, key=calculate_weighted_avg)
+print(bests[:5])
+
+
+def plot(init_locs, best_locs):
+    plt.figure(figsize=(6, 6))
+
+    plt.axis([0, 12, 0, 20])
+
+    plt.scatter([loc[0] for loc in init_locs], [loc[1] for loc in init_locs], c='r')
+
+    plt.scatter([loc[0] for loc in best_locs], [loc[1] for loc in best_locs], c='b')
+
+    plt.show()
+
+
+plot(points, bests[:5])
