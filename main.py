@@ -22,6 +22,7 @@ weights = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
 
 
 def manhattan_distance(p1, p2):
+    # return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
     return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
 
 
@@ -37,15 +38,31 @@ def calculate_weighted_avg(individual):
     return total_distance / total_weight
 
 
-population_size = 300
-mutation_chance = 0.05
-num_generations = 750
+def plot(init_locs, best_locs):
+    plt.figure(figsize=(6, 6))
 
-population = []
-for i in range(population_size):
+    plt.axis([0, 12, 0, 20])
+
+    # plt.scatter([loc[0] for loc in init_locs], [loc[1] for loc in init_locs], c='r')
+    plt.scatter([loc[0] for loc in init_locs[:3]], [loc[1] for loc in init_locs[:3]], c='g')
+    plt.scatter([loc[0] for loc in init_locs[4:9]], [loc[1] for loc in init_locs[4:9]], c='b')
+    plt.scatter([loc[0] for loc in init_locs[10:]], [loc[1] for loc in init_locs[10:]], c='r')
+
+    plt.scatter([loc[0] for loc in best_locs], [loc[1] for loc in best_locs], c='c')
+
+    plt.show()
+
+
+population_size = 40
+mutation_chance = .5
+num_generations = 1000
+
+population = set()
+while len(population) < 273:
     x = random.randint(0, 12)
     y = random.randint(0, 20)
-    population.append((x, y))
+    population.add((x, y))
+population = list(population)
 
 for generation in range(num_generations):
     fitness_values = []
@@ -78,18 +95,4 @@ for generation in range(num_generations):
 best = min(population, key=calculate_weighted_avg)
 bests = sorted(population, key=calculate_weighted_avg)
 print(bests[:5])
-
-
-def plot(init_locs, best_locs):
-    plt.figure(figsize=(6, 6))
-
-    plt.axis([0, 12, 0, 20])
-
-    plt.scatter([loc[0] for loc in init_locs], [loc[1] for loc in init_locs], c='r')
-
-    plt.scatter([loc[0] for loc in best_locs], [loc[1] for loc in best_locs], c='b')
-
-    plt.show()
-
-
 plot(points, bests[:5])
