@@ -1,23 +1,6 @@
 import random
-
+import math
 import plot
-
-points = [
-    (2.5, 9),  # Starbucks
-    (3, 3),
-    (8.5, 16),
-    (7, 5),
-    (1, 2),  # Metro
-    (1.5, 11),
-    (3.5, 5),
-    (4, 19),
-    (8, 1),
-    (12, 10),
-    (2, 4),  # Gas
-    (5, 15),
-    (6, 7),
-    (10, 8),
-]
 
 weights = {
     (2.5, 9): 1,  # Starbucks
@@ -36,9 +19,15 @@ weights = {
     (10, 8): 3
 }
 
+points = list(weights.keys())
+
 
 def manhattan_distance(p1, p2):
     return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+
+
+def euclidean_distance(p1, p2):
+    return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
 
 
 def k_neighbours(k, point):
