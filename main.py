@@ -1,5 +1,6 @@
 import random
-import matplotlib.pyplot as plt
+
+import plot
 
 points = [
     (2.5, 9),  # Starbucks
@@ -18,47 +19,61 @@ points = [
     (10, 8),
 ]
 
-weights = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+weights = {
+    (2.5, 9): 1,  # Starbucks
+    (3, 3): 1,
+    (8.5, 16): 1,
+    (7, 5): 1,
+    (1, 2): 2,  # Metro
+    (1.5, 11): 2,
+    (3.5, 5): 2,
+    (4, 19): 2,
+    (8, 1): 2,
+    (12, 10): 2,
+    (2, 4): 3,  # Gas
+    (5, 15): 3,
+    (6, 7): 3,
+    (10, 8): 3
+}
 
 
 def manhattan_distance(p1, p2):
-    # return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
     return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
 
 
-def calculate_weighted_avg(individual):
+def k_neighbours(k, point):
+    distances = []
+    for p in points:
+        dist = manhattan_distance(point, p)
+        distances.append((p, dist))
+
+    neighbors = sorted(distances, key=lambda x: x[1])
+
+    return [n[0] for n in neighbors[:k]]
+
+
+def calculate_weighted_avg(point):
     total_distance = 0
     total_weight = 0
 
-    for index, p in enumerate(points):
-        distance = manhattan_distance(individual, p)
-        total_distance += distance * weights[index]
-        total_weight += weights[index]
+    neighbors = k_neighbours(k=5, point=point)
+
+    for neighbor in neighbors:
+        distance = manhattan_distance(point, neighbor)
+        weight = weights[neighbor]
+
+        total_distance += distance * weight
+        total_weight += weight
 
     return total_distance / total_weight
 
 
-def plot(init_locs, best_locs):
-    plt.figure(figsize=(6, 6))
-
-    plt.axis([0, 12, 0, 20])
-
-    # plt.scatter([loc[0] for loc in init_locs], [loc[1] for loc in init_locs], c='r')
-    plt.scatter([loc[0] for loc in init_locs[:3]], [loc[1] for loc in init_locs[:3]], c='g')
-    plt.scatter([loc[0] for loc in init_locs[4:9]], [loc[1] for loc in init_locs[4:9]], c='b')
-    plt.scatter([loc[0] for loc in init_locs[10:]], [loc[1] for loc in init_locs[10:]], c='r')
-
-    plt.scatter([loc[0] for loc in best_locs], [loc[1] for loc in best_locs], c='c')
-
-    plt.show()
-
-
 population_size = 40
 mutation_chance = .5
-num_generations = 1000
+num_generations = 100
 
 population = set()
-while len(population) < 273:
+while len(population) < population_size:
     x = random.randint(0, 12)
     y = random.randint(0, 20)
     population.add((x, y))
@@ -95,4 +110,4 @@ for generation in range(num_generations):
 best = min(population, key=calculate_weighted_avg)
 bests = sorted(population, key=calculate_weighted_avg)
 print(bests[:5])
-plot(points, bests[:5])
+plot.plot(points, bests[:5])
