@@ -96,7 +96,19 @@ for generation in range(num_generations):
 
     population = children
 
-best = min(population, key=calculate_weighted_avg)
-bests = sorted(population, key=calculate_weighted_avg)
-print(bests[:5])
-plot.plot(points, bests[:5])
+
+
+bests = sorted(population, key=calculate_weighted_avg)[:5]
+print(bests)
+plot.plot(points, bests)
+
+coffee_demand = [100, 120, 90, 150, 80]
+construction_cost = [3200000000, 2750000000, 2100000000, 1800000000, 1900000000]
+
+profits = []
+for i, point in enumerate(bests):
+    profit = coffee_demand[i]/construction_cost[i] * calculate_weighted_avg(point)
+    profits.append(profit)
+
+best = bests[profits.index(max(profits))]
+print(best)
