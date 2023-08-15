@@ -1,7 +1,7 @@
 import random
-import math
 import plot
 import distance_metrics
+from knn import k_neighbours
 
 weights = {
     (2.5, 9): 1,  # Starbucks
@@ -20,25 +20,12 @@ weights = {
     (10, 8): 3
 }
 
-points = list(weights.keys())
-
-
-def k_neighbours(k, point):
-    distances = []
-    for p in points:
-        dist = distance_metrics.manhattan_distance(point, p)
-        distances.append((p, dist))
-
-    neighbors = sorted(distances, key=lambda x: x[1])
-
-    return [n[0] for n in neighbors[:k]]
-
 
 def calculate_weighted_avg(point):
     total_distance = 0
     total_weight = 0
 
-    neighbors = k_neighbours(k=5, point=point)
+    neighbors = k_neighbours(k=5, point=point, points=weights.keys())
 
     for neighbor in neighbors:
         distance = distance_metrics.manhattan_distance(point, neighbor)
@@ -89,18 +76,16 @@ for generation in range(num_generations):
 
     population = children
 
-
-
 bests = sorted(population, key=calculate_weighted_avg)[:5]
 print(bests)
-plot.plot(points, bests)
+plot.plot(weights, bests)
 
 coffee_demand = [100, 120, 90, 150, 80]
 construction_cost = [3200000000, 2750000000, 2100000000, 1800000000, 1900000000]
 
 profits = []
 for i, point in enumerate(bests):
-    profit = coffee_demand[i]/construction_cost[i] * calculate_weighted_avg(point)
+    profit = coffee_demand[i] / construction_cost[i] * calculate_weighted_avg(point)
     profits.append(profit)
 
 best = bests[profits.index(max(profits))]
