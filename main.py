@@ -1,6 +1,7 @@
 import random
 import math
 import plot
+import distance_metrics
 
 weights = {
     (2.5, 9): 1,  # Starbucks
@@ -22,18 +23,10 @@ weights = {
 points = list(weights.keys())
 
 
-def manhattan_distance(p1, p2):
-    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
-
-
-def euclidean_distance(p1, p2):
-    return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
-
-
 def k_neighbours(k, point):
     distances = []
     for p in points:
-        dist = manhattan_distance(point, p)
+        dist = distance_metrics.manhattan_distance(point, p)
         distances.append((p, dist))
 
     neighbors = sorted(distances, key=lambda x: x[1])
@@ -48,7 +41,7 @@ def calculate_weighted_avg(point):
     neighbors = k_neighbours(k=5, point=point)
 
     for neighbor in neighbors:
-        distance = manhattan_distance(point, neighbor)
+        distance = distance_metrics.manhattan_distance(point, neighbor)
         weight = weights[neighbor]
 
         total_distance += distance * weight
